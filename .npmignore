@@ -1,0 +1,12 @@
+/node_modules
+/src
+/docs
+/images
+.eslintrc.js
+.gitignore
+.npmignore
+build.js
+package-lock.json
+README.md
+tsconfig.json
+vite.config.ts
