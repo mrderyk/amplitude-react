@@ -1,30 +1,76 @@
-# React + TypeScript + Vite
+# Amplitude-React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This library provides an easy way to log Amplitude events in your React applications.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```
+npm i amplitude-react
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Usage
+
+First, wrap your application in the `AmplitudeReactProvider` and provide it with your project API key in Amplitude:
+
+```
+import { AmplitudeReactProvider } from "amplitude-react";
+
+const App = () => (
+  <AmplitudeReactProvider apiKey="my-amplitude-api-key">
+    {/* app components */}
+  </AmplitudeReactProvider>
+);
+```
+
+Then call the `useAmplitude` hook:
+
+```
+import { useAmplitude } from "amplitude-react";
+
+const MyComponent = (props: MyComponentProps) => {
+  const { logEvent } = useAmplitude();
+
+  const onClick = () => {
+    // Log "my-button-click-event" with {foo: "bar"} as event properties to accompany it
+    logEvent("my-button-click-event", {foo: "bar"});
+  };
+
+  return (
+    <>
+      <button onClick={onClick}>
+        My Button
+      </button>
+      {/* rest of MyComponent */}
+    </>
+  )
+};
+```
+
+## Available Functions
+
+`useAmplitude()` returns the following convenience functions:
+
+### logEvent: (eventName: string, eventProperties: Record<string, unknown>) => void;
+Log the given event name and event properties.
+
+### setUserId: (userId: string | null) => void;
+Set the ID (if given a string), or unset the ID (if given null) of the current Amplitude user.
+
+### setUserProperty: (property: string, value: string | number) => void;
+Set the given property on the current Amplitude user.
+
+### setDeviceId: (deviceId: string) => void;
+Set the device ID of the current Amplitude user.
+
+### resetIdentity: () => void;
+Completely reset the current Amplitude user by resetting their user ID and device ID.
+
+## Available Values
+
+In addition to the above, `useAmplitude()` also returns the following values:
+
+### client: AmplitudeClient
+The current Amplitude instance. Use to perform any other functions documented in the [JS SDK docs](https://amplitude.com/docs/sdks/analytics/browser/javascript-sdk). 
+
+### apiKey: string
+Your current API key

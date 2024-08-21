@@ -1,5 +1,6 @@
 
-import { useAmplitude } from "amplitude-react";
+
+import { useAmplitude } from 'amplitude-react';
 import './App.css'
 import { useEffect } from "react";
 
